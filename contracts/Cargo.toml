@@ -89,6 +89,12 @@ members = [
     "voucher-escrow",
     "prize-ledger-v2",
     "tournament-gates",
+    "rock-paper-scissors",
+    "minesweeper-escrow",
+    "token-streaming",
+    "blind-auction",
+    "prediction-market",
+    "dutch-auction",
 ]
 
 exclude = [
