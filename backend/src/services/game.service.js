@@ -47,6 +47,28 @@ const gameService = {
           players: 37,
           category: 'Jackpot / Pool',
         },
+        {
+          id: 'rock-paper-scissors',
+          name: 'Rock Paper Scissors',
+          status: 'active',
+          wager: 10,
+          description:
+            'Commit-reveal PvP hand battle with cryptographic dispute resolution on Soroban.',
+          contract: 'rock-paper-scissors',
+          players: 64,
+          category: 'PVP / Duel',
+        },
+        {
+          id: 'minesweeper-escrow',
+          name: 'Minesweeper Escrow',
+          status: 'active',
+          wager: 15,
+          description:
+            'Minefield tile clearance with multi-signature stake escrow and cash-out checkpoints.',
+          contract: 'minesweeper-escrow',
+          players: 48,
+          category: 'Strategy / Escrow',
+        },
       ],
     };
   },
@@ -124,11 +146,48 @@ const gameService = {
       throw new Error('Insufficient balance to place bet.');
     }
 
-    // Determine outcome (heads or tails)
-    const outcome = require('crypto').randomBytes(1)[0] % 2 === 0 ? 'heads' : 'tails';
-    const won = String(choice).toLowerCase() === outcome;
-    const payout = won ? numWager * 2 : 0;
-    const result = won ? 'win' : 'loss';
+    let outcome;
+    let won = false;
+    let isTie = false;
+
+    const normalizedGameType = String(gameType || 'coinflip').toLowerCase();
+    if (normalizedGameType === 'rock-paper-scissors' || normalizedGameType === 'rps') {
+      const moves = ['rock', 'paper', 'scissors'];
+      const serverMove = moves[require('crypto').randomBytes(1)[0] % 3];
+      outcome = serverMove;
+      const playerMove = String(choice || 'rock').toLowerCase();
+      if (playerMove === serverMove) {
+        isTie = true;
+        won = false;
+      } else if (
+        (playerMove === 'rock' && serverMove === 'scissors') ||
+        (playerMove === 'paper' && serverMove === 'rock') ||
+        (playerMove === 'scissors' && serverMove === 'paper')
+      ) {
+        won = true;
+      } else {
+        won = false;
+      }
+    } else if (
+      normalizedGameType === 'minesweeper-escrow' ||
+      normalizedGameType === 'minesweeper'
+    ) {
+      const hitMine = require('crypto').randomBytes(1)[0] % 4 === 0;
+      outcome = hitMine ? 'mine' : 'clear';
+      won = !hitMine;
+    } else {
+      outcome = require('crypto').randomBytes(1)[0] % 2 === 0 ? 'heads' : 'tails';
+      won = String(choice).toLowerCase() === outcome;
+    }
+
+    const payout = won
+      ? normalizedGameType.includes('minesweeper')
+        ? Number((numWager * 1.5).toFixed(2))
+        : numWager * 2
+      : isTie
+        ? numWager
+        : 0;
+    const result = won ? 'win' : isTie ? 'tie' : 'loss';
 
     // Update user balance
     const newBalance = parseFloat(user.balance || 0) - numWager + payout;

@@ -93,6 +93,15 @@ if command -v cargo >/dev/null 2>&1; then
             echo "wasm32v1-none target not installed; skipping wasm build check."
             echo "Fix: rustup target add wasm32v1-none"
         fi
+
+        echo "Running auth-signature-linter on contracts..."
+        LINTER_BIN="$REPO_ROOT/tools/auth-signature-linter/dist/index.js"
+        if [ ! -f "$LINTER_BIN" ] && command -v pnpm >/dev/null 2>&1; then
+            (cd "$REPO_ROOT" && pnpm --filter @stellarcade/auth-signature-linter run build >/dev/null 2>&1) || true
+        fi
+        if [ -f "$LINTER_BIN" ] && command -v node >/dev/null 2>&1; then
+            node "$LINTER_BIN" --contracts-dir "$REPO_ROOT/contracts" 2>&1 || true
+        fi
     elif [ ${#TOUCHED_CRATES[@]} -gt 0 ]; then
         echo "Strict Rust checks on: ${TOUCHED_CRATES[*]}"
         for crate in "${TOUCHED_CRATES[@]}"; do
@@ -116,6 +125,15 @@ if command -v cargo >/dev/null 2>&1; then
                 echo "Tests failed in $crate."
                 echo "Fix: cd contracts/$crate && cargo test"
                 FAIL=1
+            fi
+
+            echo "  -> $crate: auth-signature-linter"
+            LINTER_BIN="$REPO_ROOT/tools/auth-signature-linter/dist/index.js"
+            if [ ! -f "$LINTER_BIN" ] && command -v pnpm >/dev/null 2>&1; then
+                (cd "$REPO_ROOT" && pnpm --filter @stellarcade/auth-signature-linter run build >/dev/null 2>&1) || true
+            fi
+            if [ -f "$LINTER_BIN" ] && command -v node >/dev/null 2>&1; then
+                node "$LINTER_BIN" --contracts-dir "$CRATE_DIR" 2>&1 || true
             fi
         done
     else

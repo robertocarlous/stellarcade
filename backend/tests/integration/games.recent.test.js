@@ -60,19 +60,50 @@ describe('GET /api/games', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.games).toBeInstanceOf(Array);
-    expect(res.body.games.length).toBe(3);
+    expect(res.body.games.length).toBe(5);
     expect(res.body.games[0].id).toBe('coinflip-duel');
+    const ids = res.body.games.map((g) => g.id);
+    expect(ids).toContain('rock-paper-scissors');
+    expect(ids).toContain('minesweeper-escrow');
   });
 });
 
 describe('POST /api/games/play', () => {
-  test('returns success through game service', async () => {
+  test('returns success through game service for coinflip', async () => {
     GameModel.create.mockResolvedValue({ id: 1 });
     TransactionModel.create.mockResolvedValue({ id: 1 });
 
     const res = await request(app)
       .post('/api/games/play')
       .send({ gameId: 'coinflip-duel', wager: 10, choice: 'heads' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.result).toBeDefined();
+    expect(res.body.win).toBeDefined();
+    expect(res.body.txHash).toBeDefined();
+  });
+
+  test('returns success through game service for rock-paper-scissors', async () => {
+    GameModel.create.mockResolvedValue({ id: 2 });
+    TransactionModel.create.mockResolvedValue({ id: 2 });
+
+    const res = await request(app)
+      .post('/api/games/play')
+      .send({ gameType: 'rock-paper-scissors', wager: 10, choice: 'rock' });
+
+    expect(res.status).toBe(200);
+    expect(res.body.result).toBeDefined();
+    expect(res.body.win).toBeDefined();
+    expect(res.body.txHash).toBeDefined();
+  });
+
+  test('returns success through game service for minesweeper-escrow', async () => {
+    GameModel.create.mockResolvedValue({ id: 3 });
+    TransactionModel.create.mockResolvedValue({ id: 3 });
+
+    const res = await request(app)
+      .post('/api/games/play')
+      .send({ gameType: 'minesweeper-escrow', wager: 15, choice: 'clear' });
 
     expect(res.status).toBe(200);
     expect(res.body.result).toBeDefined();
