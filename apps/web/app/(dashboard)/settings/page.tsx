@@ -11,6 +11,7 @@ import {
 import { motion } from "framer-motion";
 
 import { PageHeader } from "../../../src/components/ui/page-header";
+import { AmbientSoundMixer } from "../../../src/components";
 import { cn } from "../../../src/lib/utils";
 import {
   getTableDensityPreference,
@@ -154,6 +155,7 @@ export default function SettingsPage() {
   const [autoVerify, setAutoVerify] = useState(true);
   const [tableDensity, setTableDensity] = useState<TableDensityPreference>("compact");
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [isMixerOpen, setIsMixerOpen] = useState(false);
 
   useEffect(() => {
     setTableDensity(getTableDensityPreference("dashboard-surfaces"));
@@ -221,14 +223,23 @@ export default function SettingsPage() {
           title="Arcade Sound FX & Cues"
           description="Play audio effects on round reveals, dice rolls, and jackpot prize disbursements."
           control={
-            <Switch
-              checked={soundEnabled}
-              label="Arcade sound effects"
-              onChange={(next) => {
-                setSoundEnabled(next);
-                triggerSaveAlert();
-              }}
-            />
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsMixerOpen(true)}
+                className="rounded-lg border border-border bg-background/60 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-background/90"
+              >
+                Open Sound Mixer
+              </button>
+              <Switch
+                checked={soundEnabled}
+                label="Arcade sound effects"
+                onChange={(next) => {
+                  setSoundEnabled(next);
+                  triggerSaveAlert();
+                }}
+              />
+            </div>
           }
         />
       </SettingsCard>
@@ -263,6 +274,24 @@ export default function SettingsPage() {
           }
         />
       </SettingsCard>
+
+      {isMixerOpen && (
+        <div
+          role="presentation"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs"
+          onClick={() => setIsMixerOpen(false)}
+        >
+          <div className="relative w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
+            <AmbientSoundMixer
+              isOpen={isMixerOpen}
+              onClose={() => setIsMixerOpen(false)}
+              onConfigChange={() => {
+                triggerSaveAlert();
+              }}
+            />
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }

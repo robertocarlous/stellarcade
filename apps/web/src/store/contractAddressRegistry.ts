@@ -15,6 +15,12 @@ export interface ContractAddresses {
   accessControl: string;
   coinFlip: string;
   randomGenerator: string;
+  rockPaperScissors?: string;
+  minesweeperEscrow?: string;
+  tokenStreaming?: string;
+  blindAuction?: string;
+  predictionMarket?: string;
+  dutchAuction?: string;
 }
 
 /**
@@ -46,6 +52,15 @@ export class ContractAddressRegistry {
       ["randomGenerator", "NEXT_PUBLIC_RANDOM_GENERATOR_CONTRACT_ID", "VITE_RANDOM_GENERATOR_CONTRACT_ID"],
     ];
 
+    const optional: Array<[keyof ContractAddresses, string, string]> = [
+      ["rockPaperScissors", "NEXT_PUBLIC_ROCK_PAPER_SCISSORS_CONTRACT_ID", "VITE_ROCK_PAPER_SCISSORS_CONTRACT_ID"],
+      ["minesweeperEscrow", "NEXT_PUBLIC_MINESWEEPER_ESCROW_CONTRACT_ID", "VITE_MINESWEEPER_ESCROW_CONTRACT_ID"],
+      ["tokenStreaming", "NEXT_PUBLIC_TOKEN_STREAMING_CONTRACT_ID", "VITE_TOKEN_STREAMING_CONTRACT_ID"],
+      ["blindAuction", "NEXT_PUBLIC_BLIND_AUCTION_CONTRACT_ID", "VITE_BLIND_AUCTION_CONTRACT_ID"],
+      ["predictionMarket", "NEXT_PUBLIC_PREDICTION_MARKET_CONTRACT_ID", "VITE_PREDICTION_MARKET_CONTRACT_ID"],
+      ["dutchAuction", "NEXT_PUBLIC_DUTCH_AUCTION_CONTRACT_ID", "VITE_DUTCH_AUCTION_CONTRACT_ID"],
+    ];
+
     const resolved: Partial<ContractAddresses> = {};
 
     for (const [key, nextEnvVar, viteEnvVar] of required) {
@@ -54,6 +69,13 @@ export class ContractAddressRegistry {
         throw SorobanClientError.addressNotFound(key);
       }
       resolved[key] = value;
+    }
+
+    for (const [key, nextEnvVar, viteEnvVar] of optional) {
+      const value = e[nextEnvVar] || e[viteEnvVar];
+      if (value && value !== "C...") {
+        resolved[key] = value;
+      }
     }
 
     const registry = new ContractAddressRegistry(resolved as ContractAddresses);
@@ -77,7 +99,8 @@ export class ContractAddressRegistry {
 
   validate(): void {
     for (const [key, addr] of Object.entries(this.addresses)) {
-      if (!addr || addr === "C...") {
+      if (!addr) continue;
+      if (addr === "C...") {
         throw SorobanClientError.addressNotFound(key);
       }
       if (!isValidContractAddress(addr)) {

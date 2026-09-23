@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AudioSlider } from "./AudioSlider";
+import "./AmbientSoundMixer.css";
 import {
   AmbientSoundMixerProps,
   AMBIENT_MIXER_STORAGE_KEY,

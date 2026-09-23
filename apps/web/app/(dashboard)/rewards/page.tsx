@@ -10,6 +10,7 @@ import { Button } from "../../../src/components/ui/button";
 import { EmptyState } from "../../../src/components/ui/empty-state";
 import { PageHeader } from "../../../src/components/ui/page-header";
 import { StatTile } from "../../../src/components/ui/stat-tile";
+import { StreakMultiplierWidget } from "../../../src/components";
 import { cn } from "../../../src/lib/utils";
 import { useWalletStatus } from "../../../src/hooks/useWalletStatus";
 import { useClaimableRewards, type RewardItem } from "../../../src/services/player-data";
@@ -19,6 +20,19 @@ export default function RewardsPage() {
   const { items: rewards } = useClaimableRewards();
   const [claimingId, setClaimingId] = useState<string | null>(null);
   const [claimedIds, setClaimedIds] = useState<string[]>([]);
+  const [streak, setStreak] = useState(0);
+  const [multiplier, setMultiplier] = useState(1.0);
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
+
+  const handleStreakCheckIn = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    setStreak((prev) => {
+      const next = prev + 1;
+      setMultiplier(Number((1.0 + next * 0.1).toFixed(2)));
+      setExpiresAt(new Date(Date.now() + 24 * 3600 * 1000).toISOString());
+      return next;
+    });
+  };
 
   const handleClaim = async (reward: RewardItem) => {
     if (!wallet.capabilities.isConnected) {
@@ -62,6 +76,14 @@ export default function RewardsPage() {
             <Link href="/portfolio">View Portfolio</Link>
           </Button>
         }
+      />
+
+      <StreakMultiplierWidget
+        currentStreak={streak}
+        multiplier={multiplier}
+        nextTierAt={5}
+        expiresAt={expiresAt}
+        onCheckIn={handleStreakCheckIn}
       />
 
       {/* These read empty rather than showing sample balances: a placeholder

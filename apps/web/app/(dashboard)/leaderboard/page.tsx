@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Button } from "../../../src/components/ui/button";
 import { EmptyState } from "../../../src/components/ui/empty-state";
 import { PageHeader } from "../../../src/components/ui/page-header";
+import { LeaderboardPrizeTicker } from "../../../src/components";
 import { cn } from "../../../src/lib/utils";
 import { useLeaderboard } from "../../../src/services/player-data";
 
@@ -84,6 +85,12 @@ export default function LeaderboardPage() {
         </section>
       ) : (
         <>
+          <LeaderboardPrizeTicker
+            prizePoolXlm={entries.reduce((sum, player) => sum + player.totalVolumeXlm, 0) * 0.1}
+            targetResetTs={new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()}
+            topPrizes={[50, 30, 20]}
+          />
+
           {/* Podium */}
           <div className="grid gap-4 md:grid-cols-3">
             {entries.slice(0, 3).map((player, idx) => (

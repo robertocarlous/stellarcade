@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Portfolio, type PortfolioState } from "../../../src/components/Portfolio";
+import { TokenSwapRateCalculator } from "../../../src/components";
 import { useWalletStatus } from "../../../src/hooks/useWalletStatus";
 import { createProfileApiClient } from "../../../src/services/profile-service";
 
@@ -68,11 +69,36 @@ export default function PortfolioPage() {
   };
 
   return (
-    <Portfolio
-      state={state}
-      onOpenWallet={() => router.push("/profile")}
-      onBrowseRewards={() => router.push("/rewards")}
-      onBrowseCollectibles={() => router.push("/quests")}
-    />
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
+      <Portfolio
+        state={state}
+        onOpenWallet={() => router.push("/profile")}
+        onBrowseRewards={() => router.push("/rewards")}
+        onBrowseCollectibles={() => router.push("/quests")}
+      />
+
+      <section
+        aria-labelledby="token-swap-heading"
+        className="rounded-2xl border border-border bg-card/60 p-6 backdrop-blur-sm"
+      >
+        <div className="mb-4">
+          <h2 id="token-swap-heading" className="text-base font-bold text-foreground">
+            Instant Token Swap Calculator
+          </h2>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            Preview real-time exchange rates, estimated slippage, and routing fees for Stellar asset swaps.
+          </p>
+        </div>
+        <TokenSwapRateCalculator
+          fromSymbol="XLM"
+          toSymbol="USDC"
+          exchangeRate={0.12}
+          feePercent={0.3}
+          onSwap={(quote, amount) => {
+            // Swap preview callback
+          }}
+        />
+      </section>
+    </div>
   );
 }
