@@ -1893,6 +1893,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "stellarcade-blind-auction"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+]
+
+[[package]]
 name = "stellarcade-bonus-vault"
 version = "0.1.0"
 dependencies = [
@@ -2039,6 +2046,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "stellarcade-dutch-auction"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+]
+
+[[package]]
 name = "stellarcade-dynamic-fee-policy"
 version = "0.1.0"
 dependencies = [
@@ -2161,6 +2175,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "stellarcade-minesweeper-escrow"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+]
+
+[[package]]
 name = "stellarcade-mission-checkins"
 version = "0.1.0"
 dependencies = [
@@ -2232,6 +2253,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "stellarcade-prediction-market"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+]
+
+[[package]]
 name = "stellarcade-price-prediction"
 version = "0.1.0"
 dependencies = [
@@ -2289,6 +2317,13 @@ dependencies = [
 
 [[package]]
 name = "stellarcade-reward-stream"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+]
+
+[[package]]
+name = "stellarcade-rock-paper-scissors"
 version = "0.1.0"
 dependencies = [
  "soroban-sdk",
@@ -2373,6 +2408,13 @@ dependencies = [
 
 [[package]]
 name = "stellarcade-ticket-redeemer"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+]
+
+[[package]]
+name = "stellarcade-token-streaming"
 version = "0.1.0"
 dependencies = [
  "soroban-sdk",

@@ -323,3 +323,14 @@ export type { HeadingHierarchyRegionProps, RegionHeadingProps } from "./HeadingH
 
 export { RngRequestStatusComponent } from "./RngRequestStatus";
 export type { RngRequestStatusProps } from "./RngRequestStatus";
+
+export { VictoryConfettiOverlay } from "./arcade/victory-confetti-overlay/VictoryConfettiOverlay";
+export { LevelUpCelebrationModal } from "./arcade/level-up-celebration-modal/LevelUpCelebrationModal";
+export { WagerKeypadControl } from "./arcade/wager-keypad-control/WagerKeypadControl";
+export { WagerBetSlip } from "./arcade/wager-bet-slip/WagerBetSlip";
+export { AmbientSoundMixer } from "./arcade/ambient-sound-mixer/AmbientSoundMixer";
+export { StreakMultiplierWidget } from "./arcade/streak-multiplier/StreakMultiplierWidget";
+export { LeaderboardPrizeTicker } from "./arcade/leaderboard-prize-ticker/LeaderboardPrizeTicker";
+export { MysteryCrateUnboxing } from "./arcade/mystery-crate-unboxing/MysteryCrateUnboxing";
+export { TokenSwapRateCalculator } from "./arcade/token-swap-rate-calculator/TokenSwapRateCalculator";
+export { MatchWagerCalculator } from "./arcade/match-wager-calculator/MatchWagerCalculator";
